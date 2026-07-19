@@ -1,0 +1,16 @@
+@use 'sass:math';
+@use 'sass:string';
+
+$design-width: 360;
+$function-base-size: 10;
+
+@function mobile-vw($size) {
+  $rem-size: math.div($size, $function-base-size) * 1rem;
+  $vw-size: math.div($size, $design-width) * 100vw;
+
+  @return string.unquote("min(#{$rem-size}, #{$vw-size})");
+}
+
+@function __vw($size) {
+  @return mobile-vw($size);
+}
