@@ -37,16 +37,12 @@ export default function TdfPage() {
 
   const handleSectionSelect = useCallback((id: string) => {
     if (id === 'tdf-overview') {
-      if (introState.locked) {
-        fullPageRef.current?.showSlide(1)
-      } else {
-        fullPageRef.current?.releaseTo(id)
-      }
+      fullPageRef.current?.showSlide(1)
       return
     }
 
     fullPageRef.current?.releaseTo(id)
-  }, [introState.locked])
+  }, [])
 
   const introSlides = [
     <TdfHero key="hero" />,
