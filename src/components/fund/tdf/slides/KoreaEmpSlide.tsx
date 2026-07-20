@@ -1,14 +1,4 @@
-import { tdfContentImages } from '../../../../assets/images/fund/tdf'
-import comparisonArrow from '../../../../assets/images/fund/tdf/korea-comparison-arrow.svg'
-import comparisonFlag from '../../../../assets/images/fund/tdf/korea-comparison-flag.svg'
-import initialGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-initial-global.svg'
-import initialKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-initial-korea.svg'
-import investorGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-investor-global.svg'
-import investorKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-investor-korea.svg'
-import retirementGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-retirement-global.svg'
-import retirementKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-retirement-korea.svg'
-import targetGlobalIcon from '../../../../assets/images/fund/tdf/korea-comparison-target-global.svg'
-import targetKoreaIcon from '../../../../assets/images/fund/tdf/korea-comparison-target-korea.svg'
+import { tdfContentImages } from '@/assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
 
@@ -24,6 +14,7 @@ const koreaEmpStrategies = [
       '시장 상황을 고려한 리밸런싱으로 운용 성과를 관리합니다.',
     ],
     icon: tdfContentImages.icons.allocationSystem,
+    accent: '한국인의 특성에 적합한',
   },
   {
     title: '국내 투자 대표 ETF를 통한 초분산·저비용 포트폴리오',
@@ -32,6 +23,7 @@ const koreaEmpStrategies = [
       '국내 주식·채권·대체자산을 포함한 포트폴리오를 구성합니다.',
     ],
     icon: tdfContentImages.icons.coin,
+    accent: '국내 투자 대표 ETF',
   },
   {
     title: 'Core & Satellite 전략을 통한 알파 추구',
@@ -40,6 +32,7 @@ const koreaEmpStrategies = [
       '채권 듀레이션 전략으로 시장의 단기 변동성에 대응합니다.',
     ],
     icon: tdfContentImages.icons.aiStrategy,
+    accent: 'Core & Satellite',
   },
 ]
 
@@ -57,19 +50,19 @@ export default function KoreaEmpSlide({
           <div className="korea-comparison__ratio">
             <strong>공통 위험자산 비중 구조</strong>
             <span>초기 <b>79%</b></span>
-            <i><img src={comparisonArrow} alt="" /></i>
+            <i><img src={tdfContentImages.comparison.arrow} alt="" /></i>
             <span>은퇴시점 <b>35.6%</b></span>
-            <i><img src={comparisonArrow} alt="" /></i>
+            <i><img src={tdfContentImages.comparison.arrow} alt="" /></i>
             <span>생애말 <b>23%</b></span>
           </div>
           <div className="comparison-grid">
             <ComparisonCard
               title="글로벌 글라이드 패스"
               rows={[
-                ['투자 대상', '전세계 주식 · 채권 · 대체자산', targetGlobalIcon],
-                ['초기 전략', '글로벌 분산 · 안정적 성장', initialGlobalIcon],
-                ['은퇴시점 전략', '완만한 경사 · 안전자산 확대', retirementGlobalIcon],
-                ['이런 투자자에게', '단일 국가 리스크 헤지 · 전세계 성장 편승', investorGlobalIcon],
+                ['투자 대상', '전세계 주식 · 채권 · 대체자산', tdfContentImages.comparison.target.global],
+                ['초기 전략', '글로벌 분산 · 안정적 성장', tdfContentImages.comparison.initial.global],
+                ['은퇴시점 전략', '완만한 경사 · 안전자산 확대', tdfContentImages.comparison.retirement.global],
+                ['이런 투자자에게', '단일 국가 리스크 헤지 · 전세계 성장 편승', tdfContentImages.comparison.investor.global],
               ]}
             />
             <ComparisonCard
@@ -77,16 +70,16 @@ export default function KoreaEmpSlide({
               badge="한국형 전략"
               highlighted
               rows={[
-                ['투자 대상', '국내 주식 및 채권 중심', targetKoreaIcon],
-                ['초기 전략', '위험자산 비중↑ · 수익성 극대화', initialKoreaIcon],
-                ['은퇴시점 전략', '가파른 감소 · 자산보호 강화', retirementKoreaIcon],
-                ['이런 투자자에게', '국내 경제성장 활용 · 형성기엔 적극, 은퇴기엔 보존', investorKoreaIcon],
+                ['투자 대상', '국내 주식 및 채권 중심', tdfContentImages.comparison.target.korea],
+                ['초기 전략', '위험자산 비중↑ · 수익성 극대화', tdfContentImages.comparison.initial.korea],
+                ['은퇴시점 전략', '가파른 감소 · 자산보호 강화', tdfContentImages.comparison.retirement.korea],
+                ['이런 투자자에게', '국내 경제성장 활용 · 형성기엔 적극, 은퇴기엔 보존', tdfContentImages.comparison.investor.korea],
               ]}
             />
           </div>
         </div>
       ) : (
-        <StrategyCards items={koreaEmpStrategies} />
+        <StrategyCards items={koreaEmpStrategies} bulleted />
       )}
     </div>
   )
@@ -106,7 +99,7 @@ function ComparisonCard({ title, badge, highlighted, rows }: ComparisonCardProps
         {title}
         {badge && (
           <span>
-            <img src={comparisonFlag} alt="" />
+            <img src={tdfContentImages.comparison.flag} alt="" />
             {badge}
           </span>
         )}

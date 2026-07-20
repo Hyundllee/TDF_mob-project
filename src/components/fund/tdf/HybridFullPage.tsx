@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
@@ -21,56 +22,77 @@ interface HybridFullPageProps {
 const TRANSITION_TIME = 720
 const WHEEL_THRESHOLD = 8
 
+function resetDocumentScroll() {
+  document.documentElement.scrollTo({ top: 0, behavior: 'auto' })
+  document.body.scrollTo({ top: 0, behavior: 'auto' })
+  window.scrollTo({ top: 0, behavior: 'auto' })
+}
+
 const HybridFullPage = forwardRef<HybridFullPageHandle, HybridFullPageProps>(
   function HybridFullPage({ slides, onStateChange }, ref) {
     const [activeIndex, setActiveIndex] = useState(0)
     const [locked, setLocked] = useState(true)
     const movingRef = useRef(false)
+    const transitionTimerRef = useRef<number | null>(null)
     const sectionRef = useRef<HTMLElement>(null)
     const touchStartRef = useRef<number | null>(null)
 
     const holdTransition = useCallback(() => {
       movingRef.current = true
-      window.setTimeout(() => {
+      if (transitionTimerRef.current !== null) {
+        window.clearTimeout(transitionTimerRef.current)
+      }
+      transitionTimerRef.current = window.setTimeout(() => {
         movingRef.current = false
+        transitionTimerRef.current = null
       }, TRANSITION_TIME)
     }, [])
 
     const showSlide = useCallback(
       (index: number) => {
-        if (movingRef.current) return
         const safeIndex = Math.min(Math.max(index, 0), slides.length - 1)
         holdTransition()
         setActiveIndex(safeIndex)
         setLocked(true)
-        window.scrollTo({ top: 0, behavior: 'auto' })
+        resetDocumentScroll()
       },
       [holdTransition, slides.length],
     )
 
     const releaseTo = useCallback(
       (targetId: string) => {
-        if (movingRef.current) return
         holdTransition()
+        document.documentElement.classList.remove('tdf-intro-locked')
+        document.body.classList.remove('tdf-intro-locked')
         setLocked(false)
-        window.requestAnimationFrame(() => {
-          window.requestAnimationFrame(() => {
-            document.getElementById(targetId)?.scrollIntoView({
-              block: 'start',
-              behavior: 'auto',
-            })
-          })
-        })
+        window.setTimeout(() => {
+          const target = document.getElementById(targetId)
+          if (!target) return
+          target.scrollIntoView({ block: 'start', behavior: 'smooth' })
+        }, 32)
       },
       [holdTransition],
     )
 
     useImperativeHandle(ref, () => ({ showSlide, releaseTo }), [releaseTo, showSlide])
 
+    useLayoutEffect(() => {
+      const previousScrollRestoration = window.history.scrollRestoration
+      window.history.scrollRestoration = 'manual'
+      resetDocumentScroll()
+      const frame = window.requestAnimationFrame(resetDocumentScroll)
+
+      return () => {
+        window.cancelAnimationFrame(frame)
+        window.history.scrollRestoration = previousScrollRestoration
+      }
+    }, [])
+
     useEffect(() => {
       const className = 'tdf-intro-locked'
       document.documentElement.classList.toggle(className, locked)
       document.body.classList.toggle(className, locked)
+      if (locked) resetDocumentScroll()
       onStateChange?.(activeIndex, locked)
 
       return () => {
@@ -84,8 +106,7 @@ const HybridFullPage = forwardRef<HybridFullPageHandle, HybridFullPageProps>(
         if (movingRef.current) return
 
         if (!locked) {
-          const introHeight = sectionRef.current?.offsetHeight ?? window.innerHeight
-          if (direction < 0 && window.scrollY <= introHeight + 2) {
+          if (direction < 0 && window.scrollY <= 2) {
             showSlide(slides.length - 1)
           }
           return
@@ -108,7 +129,7 @@ const HybridFullPage = forwardRef<HybridFullPageHandle, HybridFullPageProps>(
     useEffect(() => {
       const handleWheel = (event: WheelEvent) => {
         if (Math.abs(event.deltaY) < WHEEL_THRESHOLD) return
-        if (locked || (event.deltaY < 0 && window.scrollY <= window.innerHeight + 2)) {
+        if (locked || (!locked && event.deltaY < 0 && window.scrollY <= 2)) {
           event.preventDefault()
         }
         move(event.deltaY > 0 ? 1 : -1)

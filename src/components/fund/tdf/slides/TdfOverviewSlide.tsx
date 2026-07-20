@@ -1,4 +1,4 @@
-import { tdfContentImages } from '../../../../assets/images/fund/tdf'
+import { tdfContentImages } from '@/assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
 
@@ -14,6 +14,7 @@ const overviewStrategies = [
       '투자 포트폴리오를 주기적으로 조정해 장기 수익을 추구합니다.',
     ],
     icon: tdfContentImages.icons.rebalancingScale,
+    accent: '리밸런싱',
   },
   {
     title: '글로벌 자산배분',
@@ -21,7 +22,8 @@ const overviewStrategies = [
       '다양한 지역과 자산에 분산 투자해 불확실성을 관리합니다.',
       '시장 환경에 맞춰 추가 수익 기회를 찾습니다.',
     ],
-    symbol: '🌐',
+    icon: tdfContentImages.icons.globalAllocation,
+    accent: '자산배분',
   },
   {
     title: '생애주기 반영 Glide Path',
@@ -30,6 +32,7 @@ const overviewStrategies = [
       '비행기의 착륙 경로처럼 안정적으로 자산을 관리합니다.',
     ],
     icon: tdfContentImages.icons.glideAirplane,
+    accent: 'Glide Path',
   },
 ]
 
@@ -40,7 +43,7 @@ export default function TdfOverviewSlide({
 }: TdfOverviewSlideProps) {
   return (
     <div className={`content-slide content-slide--overview content-slide--overview-${variant}`}>
-      <ContentHeader eyebrow={eyebrow} title={title} />
+      {variant !== 'features' && <ContentHeader eyebrow={eyebrow} title={title} />}
 
       {variant === 'people' && (
         <div className="overview-scene overview-scene--people">
@@ -57,13 +60,13 @@ export default function TdfOverviewSlide({
               <span className="overview-callout__glass" aria-hidden="true" />
               <img
                 className="overview-callout__shape"
-                src={tdfContentImages.overviewCallout}
+                src={tdfContentImages.bubbleBox}
                 alt=""
               />
               <div className="overview-callout__content">
                 <strong>은퇴 이전</strong>
-                <span>위험자산 <b className="is-up">↑</b></span>
-                <span>안전자산 <b className="is-down">↓</b></span>
+                <span>위험자산 <img src={tdfContentImages.allocationArrows.up} alt="증가" /></span>
+                <span>안전자산 <img src={tdfContentImages.allocationArrows.down} alt="감소" /></span>
               </div>
             </div>
           </div>
@@ -74,13 +77,13 @@ export default function TdfOverviewSlide({
               <span className="overview-callout__glass" aria-hidden="true" />
               <img
                 className="overview-callout__shape"
-                src={tdfContentImages.overviewCallout}
+                src={tdfContentImages.bubbleBox}
                 alt=""
               />
               <div className="overview-callout__content">
                 <strong>은퇴 이후</strong>
-                <span>위험자산 <b className="is-down">↓</b></span>
-                <span>안전자산 <b className="is-up">↑</b></span>
+                <span>위험자산 <img src={tdfContentImages.allocationArrows.down} alt="감소" /></span>
+                <span>안전자산 <img src={tdfContentImages.allocationArrows.up} alt="증가" /></span>
               </div>
             </div>
           </div>

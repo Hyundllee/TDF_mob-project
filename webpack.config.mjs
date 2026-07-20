@@ -1,8 +1,35 @@
 import path from 'node:path'
+import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 const root = path.dirname(fileURLToPath(import.meta.url))
+const tdfAssetRoot = path.resolve(root, 'src/assets/images/fund/tdf')
+
+class EmitTdfAssetsPlugin {
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap('EmitTdfAssetsPlugin', (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: 'EmitTdfAssetsPlugin',
+          stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+        },
+        () => {
+          for (const entry of readdirSync(tdfAssetRoot, { withFileTypes: true })) {
+            if (!entry.isFile() || entry.name.endsWith('.ts')) continue
+
+            const sourcePath = path.join(tdfAssetRoot, entry.name)
+            const outputPath = `assets/images/fund/tdf/${entry.name}`
+            compilation.emitAsset(
+              outputPath,
+              new compiler.webpack.sources.RawSource(readFileSync(sourcePath)),
+            )
+          }
+        },
+      )
+    })
+  }
+}
 
 export default {
   entry: './src/main.tsx',
@@ -12,7 +39,12 @@ export default {
     clean: true,
     publicPath: '/',
   },
-  resolve: { extensions: ['.tsx', '.ts', '.js'] },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@': path.resolve(root, 'src'),
+    },
+  },
   module: {
     rules: [
       { test: /\.tsx?$/, exclude: /node_modules/, use: 'ts-loader' },
@@ -27,7 +59,10 @@ export default {
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: './index.html' })],
+  plugins: [
+    new HtmlWebpackPlugin({ template: './index.html' }),
+    new EmitTdfAssetsPlugin(),
+  ],
   devServer: {
     static: false,
     historyApiFallback: true,

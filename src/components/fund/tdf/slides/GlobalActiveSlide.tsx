@@ -1,6 +1,5 @@
-import { useEffect, useState, type CSSProperties } from 'react'
-import { tdfContentImages } from '../../../../assets/images/fund/tdf'
-import allocationDetailBracket from '../../../../assets/images/fund/tdf/allocation-detail-bracket.svg'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { tdfContentImages } from '@/assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
 
@@ -46,16 +45,16 @@ type HistoryMilestone = {
 const historyMilestones: HistoryMilestone[] = [
   {
     tone: 'magenta',
-    top: { date: '2025.9', lines: ['한국형 TDF', '2040 UH'] },
-    bottom: {
+    top: {
       date: '2016.4',
       lines: ['한국형 TDF', '2045 H', '2040 H', '2040 UH', '2035 H', '2030 H', '2025 H', '2020 H'],
       expanded: true,
     },
+    bottom: { date: '2025.9', lines: ['한국형 TDF', '2040 UH'] },
   },
   {
     tone: 'blue',
-    bottom: { date: '2016.10', lines: ['한국형 TDF', '2015 H'] },
+    top: { date: '2016.10', lines: ['한국형 TDF', '2015 H'] },
   },
   {
     tone: 'magenta',
@@ -64,7 +63,7 @@ const historyMilestones: HistoryMilestone[] = [
   },
   {
     tone: 'blue',
-    bottom: { date: '2019.12', lines: ['한국형 TDF', '2055 H'] },
+    top: { date: '2019.12', lines: ['한국형 TDF', '2055 H'] },
   },
   {
     tone: 'magenta',
@@ -73,7 +72,7 @@ const historyMilestones: HistoryMilestone[] = [
   },
   {
     tone: 'magenta',
-    top: { date: '2026.4', lines: ['글로벌 액티브 TDF', '리브랜딩'] },
+    bottom: { date: '2026.4', lines: ['글로벌 액티브 TDF', '리브랜딩'] },
   },
 ]
 
@@ -85,6 +84,7 @@ const globalActiveStrategies = [
       '시장 상황을 고려한 리밸런싱으로 운용 성과를 지속적으로 점검합니다.',
     ],
     icon: tdfContentImages.icons.pieChart,
+    accent: 'Glide Path',
   },
   {
     title: '전 세계 우량 펀드를 선별하는 오픈 아키텍처 글로벌 분산투자',
@@ -93,6 +93,7 @@ const globalActiveStrategies = [
       '전문 운용사의 역량을 활용해 시장의 알파를 추구합니다.',
     ],
     icon: tdfContentImages.icons.calendarChart,
+    accent: '오픈 아키텍처',
   },
   {
     title: '전사 역량이 집약된 삼성자산운용의 대표 연금 펀드',
@@ -101,6 +102,7 @@ const globalActiveStrategies = [
       '자산군별 협업과 검증을 거쳐 투자 비중을 결정합니다.',
     ],
     icon: tdfContentImages.icons.wonPuzzle,
+    accent: '대표 연금 펀드',
   },
 ]
 
@@ -111,41 +113,38 @@ export default function GlobalActiveSlide({
 }: GlobalActiveSlideProps) {
   return (
     <div className={`content-slide content-slide--global-active content-slide--global-active-${variant}`}>
-      <ContentHeader eyebrow={eyebrow} title={title} />
+      {variant !== 'glide' && <ContentHeader eyebrow={eyebrow} title={title} />}
 
       {variant === 'history' && (
-        <div className="history-timeline">
-          <img className="history-timeline__rail" src={tdfContentImages.timeline.arrow} alt="" />
-          {historyMilestones.map((milestone, index) => (
-            <article
-              key={`${milestone.top?.date ?? milestone.bottom?.date}-${index}`}
-              className={`history-timeline__milestone history-timeline__milestone--${milestone.tone}`}
-              style={{ '--timeline-index': index } as CSSProperties}
-            >
-              {milestone.top && (
-                <HistoryBox card={milestone.top} position="top" />
-              )}
-              <img
-                className="history-timeline__dot"
-                src={milestone.tone === 'blue' ? tdfContentImages.timeline.blueDot : tdfContentImages.timeline.magentaDot}
-                alt=""
-              />
-              {milestone.bottom && (
-                <HistoryBox card={milestone.bottom} position="bottom" />
-              )}
-            </article>
-          ))}
-          <p>
+        <>
+          <p className="history-timeline__intro">
             글로벌액티브 TDF의 역사가 한국 TDF의 역사.<br />
             은퇴자산의 적립부터 분배까지 아우르는 <b>Total Solution</b> 제공<br />
             <strong>'연속성' 그리고 '다양성'</strong>
           </p>
-        </div>
+          <div className="history-timeline">
+            <img className="history-timeline__rail" src={tdfContentImages.timeline.arrow} alt="" />
+            {historyMilestones.map((milestone, index) => (
+              <article
+                key={`${milestone.top?.date ?? milestone.bottom?.date}-${index}`}
+                className={`history-timeline__milestone history-timeline__milestone--${milestone.tone}`}
+              >
+                {milestone.top && <HistoryBox card={milestone.top} position="top" />}
+                <img
+                  className="history-timeline__dot"
+                  src={milestone.tone === 'blue' ? tdfContentImages.timeline.blueDot : tdfContentImages.timeline.magentaDot}
+                  alt=""
+                />
+                {milestone.bottom && <HistoryBox card={milestone.bottom} position="bottom" />}
+              </article>
+            ))}
+          </div>
+        </>
       )}
 
       {variant === 'glide' && <GlideAllocation />}
 
-      {variant === 'features' && <StrategyCards items={globalActiveStrategies} />}
+      {variant === 'features' && <StrategyCards items={globalActiveStrategies} bulleted />}
     </div>
   )
 }
@@ -220,6 +219,8 @@ function AnimatedRatio({ value }: { value: number }) {
 
 function GlideAllocation() {
   const [activeIndex, setActiveIndex] = useState(2)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
   const selected = allocationPoints[activeIndex]
   const focusPosition = (activeIndex + 0.5) * 10
   const chartStyle = {
@@ -230,41 +231,59 @@ function GlideAllocation() {
     ? <>나의 <b>은퇴 시점</b>,</>
     : <>나의 은퇴 {selected.phase} <b>{selected.year}년</b>,</>
 
+  useEffect(() => {
+    const scroller = scrollerRef.current
+    const button = buttonRefs.current[activeIndex]
+    if (!scroller || !button) return
+
+    scroller.scrollTo({
+      left: button.offsetLeft - scroller.clientWidth / 2 + button.clientWidth / 2,
+      behavior: 'smooth',
+    })
+  }, [activeIndex])
+
   return (
     <div
       className={`allocation-chart${selected.phase === '시점' ? ' is-retirement-selected' : ''}`}
       style={chartStyle}
     >
-      <div className="allocation-chart__plot-wrap">
+      <p className="allocation-chart__guide">좌우로 넘겨 나에게 맞는 시기를 탐색해보세요.</p>
+      <div className="allocation-chart__canvas">
         <div className="allocation-chart__y-axis" aria-hidden="true">
-          <span>100(%)</span>
-          <span>80</span>
-          <span>60</span>
-          <span>40</span>
-          <span>20</span>
-          <span>0</span>
+          <span>100(%)</span><span>80</span><span>60</span><span>40</span><span>20</span><span>0</span>
         </div>
-        <div className="allocation-chart__plot">
-          <img src={tdfContentImages.glidePathArea} alt="은퇴 시점에 따른 주식과 채권 비중 변화 그래프" />
-          <span className="allocation-chart__retirement-line" aria-hidden="true" />
-          <span className="allocation-chart__focus" aria-hidden="true">
-            <i />
-          </span>
+        <div className="allocation-chart__scroller" ref={scrollerRef}>
+          <div className="allocation-chart__track">
+            <div className="allocation-chart__plot">
+              <img src={tdfContentImages.glidePathArea} alt="은퇴 시점에 따른 주식과 채권 비중 변화 그래프" />
+              <span className="allocation-chart__veil" aria-hidden="true" />
+              <span className="allocation-chart__retirement-line" aria-hidden="true" />
+              <span className="allocation-chart__focus" aria-hidden="true">
+                <img src={tdfContentImages.allocationChart.slider} alt="" />
+              </span>
+            </div>
+            <div className="allocation-chart__axis" aria-label="은퇴 시점 선택">
+              {allocationPoints.map((point, index) => (
+                <button
+                  ref={(element) => { buttonRefs.current[index] = element }}
+                  key={point.axisLabel}
+                  type="button"
+                  className={index === activeIndex ? 'is-active' : ''}
+                  aria-pressed={index === activeIndex}
+                  onClick={() => setActiveIndex(index)}
+                >
+                  {point.axisLabel}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="allocation-chart__axis" aria-label="은퇴 시점 선택">
-        {allocationPoints.map((point, index) => (
-          <button
-            key={point.axisLabel}
-            type="button"
-            className={index === activeIndex ? 'is-active' : ''}
-            aria-pressed={index === activeIndex}
-            onClick={() => setActiveIndex(index)}
-          >
-            {point.axisLabel}
-          </button>
-        ))}
+        <img
+          className="allocation-chart__edge-fade"
+          src={tdfContentImages.allocationChart.edgeFade}
+          alt=""
+          aria-hidden="true"
+        />
       </div>
 
       <div className="allocation-chart__summary">
@@ -277,7 +296,7 @@ function GlideAllocation() {
             </div>
           </dl>
           <div className="allocation-chart__stock-detail">
-            <img src={allocationDetailBracket} alt="" aria-hidden="true" />
+            <img src={tdfContentImages.allocationDetailBracket} alt="" aria-hidden="true" />
             <dl>
               <div>
                 <dt><i aria-hidden="true" />액티브 주식</dt>
@@ -286,10 +305,6 @@ function GlideAllocation() {
               <div className="allocation-chart__core-ratio">
                 <dt><i aria-hidden="true" />코어 주식</dt>
                 <dd><AnimatedRatio value={selected.coreStock} /></dd>
-                <div className="allocation-chart__tooltip" role="note">
-                  <span><b>코어 주식</b> 글로벌 성장주식 (자산 증대 기대)</span>
-                  <span><b>액티브 주식</b> 글로벌 주식 (성과 및 위험 관리)</span>
-                </div>
               </div>
             </dl>
           </div>
@@ -300,6 +315,10 @@ function GlideAllocation() {
             </div>
           </dl>
         </div>
+      </div>
+      <div className="allocation-chart__tooltip" role="note">
+        <span><b>*코어 주식</b> 글로벌 성장주식 (자산 증대 기대)</span>
+        <span><b>*액티브 주식</b> 글로벌 주식 (성과 및 위험 관리)</span>
       </div>
     </div>
   )

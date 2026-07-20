@@ -1,75 +1,113 @@
-import tdf20 from './tdf-20.svg'
-import tdf30 from './tdf-30.svg'
-import tdf40 from './tdf-40.svg'
-import tdf50 from './tdf-50.svg'
-import tdf60 from './tdf-60.svg'
-import youngNeutral from './character-young-neutral.svg'
-import youngTalking from './character-young-talking.svg'
-import seniorNeutral from './character-senior-neutral.svg'
-import seniorTalking from './character-senior-talking.svg'
-import growth from './icon-growth.svg'
-import plant from './icon-plant.svg'
-import rocket from './icon-rocket.svg'
-import pine from './icon-pine.svg'
-import safety from './icon-safety.svg'
-import tree from './icon-tree.svg'
-import balance from './icon-balance.svg'
-import apple from './icon-apple.svg'
-import cash from './icon-cash.svg'
-import rebalancing from './icon-rebalancing-scale.svg'
-import glideAirplane from './icon-glide-airplane.svg'
-import allocation from './icon-allocation-system.svg'
-import coin from './icon-coin.svg'
-import ai from './icon-ai-strategy.svg'
-import pieChart from './icon-pie-chart.svg'
-import calendarChart from './icon-calendar-chart.svg'
-import wonPuzzle from './icon-won-puzzle.svg'
-import home from './icon-home.svg'
-import warrenBuffett from './portrait-warren-buffett.svg'
-import johnBogle from './portrait-john-bogle.svg'
-import glideArea from './glide-path-area.png'
-import calloutArrow from './callout-arrow.svg'
-import overviewCallout from './overview-callout.svg'
-import timelineArrow from './timeline-arrow.svg'
-import timelineBlueDot from './timeline-dot-blue.svg'
-import timelineMagentaDot from './timeline-dot-magenta.svg'
+const getWebappBasePath = () => {
+  if (typeof document === 'undefined') return ''
 
-export const heroImages: Record<string, string> = {
-  '20': tdf20,
-  '30': tdf30,
-  '40': tdf40,
-  '50': tdf50,
-  '60': tdf60,
+  const scriptUrls = Array.from(document.scripts)
+    .map((script) => script.src)
+    .filter(Boolean)
+    .reverse()
+
+  for (const scriptUrl of scriptUrls) {
+    const url = new URL(scriptUrl, window.location.href)
+    const marker = ['/scripts/', '/assets/', '/src/'].find((path) =>
+      url.pathname.includes(path),
+    )
+
+    if (marker) {
+      return url.pathname.slice(0, url.pathname.indexOf(marker))
+    }
+  }
+
+  return ''
 }
 
-export const images = {
-  characters: { youngNeutral, youngTalking, seniorNeutral, seniorTalking },
-  heroIcons: { growth, plant, rocket, pine, safety, tree, balance, apple, cash },
-  icons: { rebalancing, glideAirplane, allocation, coin, ai, pieChart, calendarChart, wonPuzzle, home },
-  portraits: { warrenBuffett, johnBogle },
-  glideArea,
+const imageBasePath = `${getWebappBasePath()}/assets/images/fund/tdf`
+
+const imagePath = (fileName: string) => `${imageBasePath}/${fileName}`
+
+export const tdfHeroImages: Record<string, string> = {
+  '20': imagePath('tdf-20.svg'),
+  '30': imagePath('tdf-30.svg'),
+  '40': imagePath('tdf-40.svg'),
+  '50': imagePath('tdf-50.svg'),
+  '60': imagePath('tdf-60.svg'),
+}
+
+export const tdfHeroIcons = {
+  apple: imagePath('icon-apple.svg'),
+  balance: imagePath('icon-balance.svg'),
+  cash: imagePath('icon-cash.svg'),
+  growth: imagePath('icon-growth.svg'),
+  pine: imagePath('icon-pine.svg'),
+  plant: imagePath('icon-plant.svg'),
+  rocket: imagePath('icon-rocket.svg'),
+  safety: imagePath('icon-safety.svg'),
+  tree: imagePath('icon-tree.svg'),
 }
 
 export const tdfContentImages = {
-  characters: { youngNeutral, youngTalking, seniorNeutral, seniorTalking },
-  glidePathArea: glideArea,
-  calloutArrow,
-  portraits: { warrenBuffett, johnBogle },
+  characters: {
+    youngNeutral: imagePath('character-young-neutral.svg'),
+    youngTalking: imagePath('character-young-talking.svg'),
+    seniorNeutral: imagePath('character-senior-neutral.svg'),
+    seniorTalking: imagePath('character-senior-talking.svg'),
+  },
+  glidePathArea: imagePath('glide-path-area.png'),
+  calloutArrow: imagePath('callout-arrow.svg'),
+  portraits: {
+    warrenBuffett: imagePath('portrait-warren-buffett.svg'),
+    johnBogle: imagePath('portrait-john-bogle.svg'),
+  },
   timeline: {
-    arrow: timelineArrow,
-    blueDot: timelineBlueDot,
-    magentaDot: timelineMagentaDot,
+    arrow: imagePath('timeline-arrow.svg'),
+    blueDot: imagePath('timeline-dot-blue.svg'),
+    magentaDot: imagePath('timeline-dot-magenta.svg'),
   },
   icons: {
-    aiStrategy: ai,
-    allocationSystem: allocation,
-    calendarChart,
-    coin,
-    glideAirplane,
-    home,
-    pieChart,
-    rebalancingScale: rebalancing,
-    wonPuzzle,
+    aiStrategy: imagePath('icon-ai-strategy.svg'),
+    allocationSystem: imagePath('icon-allocation-system.svg'),
+    calendarChart: imagePath('icon-calendar-chart.svg'),
+    coin: imagePath('icon-coin.svg'),
+    glideAirplane: imagePath('icon-glide-airplane.svg'),
+    home: imagePath('icon-home.svg'),
+    pieChart: imagePath('icon-pie-chart.svg'),
+    rebalancingScale: imagePath('icon-rebalancing-scale.svg'),
+    wonPuzzle: imagePath('icon-won-puzzle.svg'),
+    globalAllocation: imagePath('icon-global-allocation.svg'),
   },
-  overviewCallout,
+  overviewCallout: imagePath('overview-callout.svg'),
+  bubbleBox: imagePath('bubble-box.svg'),
+  allocationArrows: {
+    up: imagePath('arrow-up.svg'),
+    down: imagePath('arrow-down.svg'),
+  },
+  allocationDetailBracket: imagePath('allocation-detail-bracket.svg'),
+  allocationChart: {
+    slider: imagePath('allocation-slider.svg'),
+    edgeFade: imagePath('allocation-edge-fade.svg'),
+  },
+  qnaControls: {
+    expandDark: imagePath('qna-expand-dark.svg'),
+    expandLight: imagePath('qna-expand-light.svg'),
+    collapse: imagePath('qna-collapse.svg'),
+  },
+  comparison: {
+    arrow: imagePath('korea-comparison-arrow.svg'),
+    flag: imagePath('korea-comparison-flag.svg'),
+    initial: {
+      global: imagePath('korea-comparison-initial-global.svg'),
+      korea: imagePath('korea-comparison-initial-korea.svg'),
+    },
+    investor: {
+      global: imagePath('korea-comparison-investor-global.svg'),
+      korea: imagePath('korea-comparison-investor-korea.svg'),
+    },
+    retirement: {
+      global: imagePath('korea-comparison-retirement-global.svg'),
+      korea: imagePath('korea-comparison-retirement-korea.svg'),
+    },
+    target: {
+      global: imagePath('korea-comparison-target-global.svg'),
+      korea: imagePath('korea-comparison-target-korea.svg'),
+    },
+  },
 }

@@ -6,10 +6,6 @@ export default function Header() {
   return (
     <>
       <header className="mo-header">
-        <div className="mo-header__status" aria-hidden="true">
-          <b>9:41</b>
-          <span className="mo-header__device-icons"><i /><i /><i /></span>
-        </div>
         <div className="mo-header__bar">
           <a className="mo-header__brand" href="#tdf-top" aria-label="삼성 Kodex ETF 홈">
             <i aria-hidden="true" />

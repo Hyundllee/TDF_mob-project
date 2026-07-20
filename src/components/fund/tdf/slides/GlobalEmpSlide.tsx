@@ -1,4 +1,4 @@
-import { tdfContentImages } from '../../../../assets/images/fund/tdf'
+import { tdfContentImages } from '@/assets/images/fund/tdf'
 import ContentHeader, { type ContentHeaderProps } from './shared/ContentHeader'
 import StrategyCards from './shared/StrategyCards'
 
@@ -14,6 +14,7 @@ const globalEmpStrategies = [
       '시장 상황을 고려한 리밸런싱으로 운용 성과를 최적화합니다.',
     ],
     icon: tdfContentImages.icons.allocationSystem,
+    accent: '한국인의 특성에 적합한',
   },
   {
     title: '글로벌 대표 ETF로 완성하는 초분산·저비용 포트폴리오',
@@ -22,6 +23,7 @@ const globalEmpStrategies = [
       '글로벌 주식과 대체자산, 국내 채권까지 투자 기회를 넓힙니다.',
     ],
     icon: tdfContentImages.icons.coin,
+    accent: '글로벌 대표 ETF',
   },
   {
     title: '퀀트·AI 기반의 고도화된 운용 전략과 리스크 모니터링',
@@ -30,6 +32,7 @@ const globalEmpStrategies = [
       'AI 기반 모니터링으로 변동 신호를 감지하고 선제 대응합니다.',
     ],
     icon: tdfContentImages.icons.aiStrategy,
+    accent: '퀀트·AI 기반',
   },
 ]
 
@@ -55,7 +58,7 @@ export default function GlobalEmpSlide({
           </blockquote>
         </div>
       ) : (
-        <StrategyCards items={globalEmpStrategies} />
+        <StrategyCards items={globalEmpStrategies} bulleted />
       )}
     </div>
   )

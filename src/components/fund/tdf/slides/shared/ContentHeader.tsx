@@ -1,4 +1,4 @@
-import { tdfContentImages } from '../../../../../assets/images/fund/tdf'
+import { tdfContentImages } from '@/assets/images/fund/tdf'
 
 export interface ContentHeaderProps {
   eyebrow: string

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { tdfContentImages } from '../../../../assets/images/fund/tdf'
+import { tdfContentImages } from '@/assets/images/fund/tdf'
 
 const qnaItems = [
   {
@@ -56,7 +56,11 @@ export default function QnaSlide() {
               >
                 <span>Q{index + 1}</span>
                 <strong>{item.question}</strong>
-                <i aria-hidden="true" />
+                <i aria-hidden="true">
+                  <img className="qna-control qna-control--dark" src={tdfContentImages.qnaControls.expandDark} alt="" />
+                  <img className="qna-control qna-control--light" src={tdfContentImages.qnaControls.expandLight} alt="" />
+                  <img className="qna-control qna-control--close" src={tdfContentImages.qnaControls.collapse} alt="" />
+                </i>
               </button>
               <div className="qna-slide__answer" id={contentId}>
                 <p>{item.answer}</p>
@@ -67,8 +71,8 @@ export default function QnaSlide() {
       </div>
 
       <div className="qna-slide__actions">
-        <button type="button">삼성 TDF 대표 펀드 수익률 <span>→</span></button>
-        <button type="button">TDF 3종 비교해 보기 <span>→</span></button>
+        <button type="button"><i aria-hidden="true">📈</i><span>삼성 TDF<br />대표 펀드 수익률</span></button>
+        <button type="button"><i aria-hidden="true">🎯</i><span>TDF 3종<br />비교해 보기</span></button>
       </div>
     </div>
   )

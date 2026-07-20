@@ -17,6 +17,7 @@ interface SectionNavProps {
 export default function SectionNav({ visible, introLocked, onSelect }: SectionNavProps) {
   const [activeId, setActiveId] = useState(sectionItems[0].id)
   const navRef = useRef<HTMLElement>(null)
+  const clickedSectionRef = useRef<{ id: string; expiresAt: number } | null>(null)
 
   useEffect(() => {
     if (introLocked) {
@@ -28,6 +29,14 @@ export default function SectionNav({ visible, introLocked, onSelect }: SectionNa
     const updateActiveSection = () => {
       window.cancelAnimationFrame(frame)
       frame = window.requestAnimationFrame(() => {
+        const clickedSection = clickedSectionRef.current
+        if (clickedSection) {
+          const target = document.getElementById(clickedSection.id)
+          const arrived = target && Math.abs(target.getBoundingClientRect().top) < 8
+          if (!arrived && performance.now() < clickedSection.expiresAt) return
+          clickedSectionRef.current = null
+        }
+
         const activationLine = 180
         let nextActiveId = sectionItems[0].id
 
@@ -58,7 +67,7 @@ export default function SectionNav({ visible, introLocked, onSelect }: SectionNa
 
     nav.scrollTo({
       left: active.offsetLeft - nav.clientWidth / 2 + active.clientWidth / 2,
-      behavior: 'smooth',
+      behavior: clickedSectionRef.current ? 'auto' : 'smooth',
     })
   }, [activeId])
 
@@ -72,6 +81,10 @@ export default function SectionNav({ visible, introLocked, onSelect }: SectionNa
           className={item.id === activeId ? 'is-active' : ''}
           aria-current={item.id === activeId ? 'location' : undefined}
           onClick={() => {
+            clickedSectionRef.current = {
+              id: item.id,
+              expiresAt: performance.now() + 1200,
+            }
             setActiveId(item.id)
             onSelect(item.id)
           }}

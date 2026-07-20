@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import { heroImages, images } from '../../../assets/images/fund/tdf'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { tdfHeroIcons, tdfHeroImages } from '@/assets/images/fund/tdf'
 
 const stages = [
-  { age: '20', progress: 0.08, left: '사회초년생', leftIcon: '🌱', right: '성장을 위한 투자에 집중', rightIcon: images.heroIcons.growth },
-  { age: '30', progress: 0.27, left: '자산성장기', leftIcon: images.heroIcons.plant, right: '공격적인 자산 투자 도전', rightIcon: images.heroIcons.rocket },
-  { age: '40', progress: 0.48, left: '자산안정기', leftIcon: images.heroIcons.pine, right: '노후를 위한 안전자산 비중 확대', rightIcon: images.heroIcons.safety },
-  { age: '50', progress: 0.72, left: '자산운용기', leftIcon: images.heroIcons.tree, right: '축적된 자산을 균형 있게 운용', rightIcon: images.heroIcons.balance },
-  { age: '60', progress: 0.92, left: '자산활용기', leftIcon: images.heroIcons.apple, right: '은퇴 후 안정적인 현금흐름', rightIcon: images.heroIcons.cash },
+  { age: '20', progress: 0.08, left: '사회초년생', leftIcon: '🌱', right: '성장을 위한 투자에 집중', rightIcon: tdfHeroIcons.growth },
+  { age: '30', progress: 0.27, left: '자산성장기', leftIcon: tdfHeroIcons.plant, right: '공격적인 자산 투자 도전', rightIcon: tdfHeroIcons.rocket },
+  { age: '40', progress: 0.48, left: '자산안정기', leftIcon: tdfHeroIcons.pine, right: '노후를 위한 안전자산 비중 확대', rightIcon: tdfHeroIcons.safety },
+  { age: '50', progress: 0.79, left: '자산운용기', leftIcon: tdfHeroIcons.tree, right: '축적된 자산을 균형 있게 운용', rightIcon: tdfHeroIcons.balance },
+  { age: '60', progress: 0.92, left: '자산활용기', leftIcon: tdfHeroIcons.apple, right: '은퇴 후 안정적인 현금흐름', rightIcon: tdfHeroIcons.cash },
 ]
 
 function BadgeIcon({ source }: { source: string }) {
@@ -63,9 +63,16 @@ export default function TdfHero() {
             </linearGradient>
           </defs>
           <path ref={pathRef} d="M0 14 C92 9 129 25 186 54 C245 84 306 99 360 97" fill="none" stroke="url(#mobile-hero-curve)" strokeWidth="2" />
-          <circle cx={point.x} cy={point.y} r="7" fill="#fff" stroke="#1763f5" strokeWidth="4" />
         </svg>
-        <img className="tdf-hero__image" key={active.age} src={heroImages[active.age]} alt={`${active.age}대 TDF 투자 이미지`} />
+        <img className="tdf-hero__image" key={active.age} src={tdfHeroImages[active.age]} alt={`${active.age}대 TDF 투자 이미지`} />
+        <span
+          className="tdf-hero__point"
+          style={{
+            '--point-left': `${point.x / 3.6}%`,
+            '--point-top': `${point.y / 2.56}%`,
+          } as CSSProperties}
+          aria-hidden="true"
+        />
         <div className="tdf-hero__badge tdf-hero__badge--left"><span><BadgeIcon source={active.leftIcon} /></span><b>{active.left}</b></div>
         <div className="tdf-hero__badge tdf-hero__badge--right"><span><BadgeIcon source={active.rightIcon} /></span><b>{active.right}</b></div>
       </div>

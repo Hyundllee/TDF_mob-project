@@ -1,11 +1,11 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import Header from '../../../components/Header'
-import Footer from '../../../components/Footer'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import HybridFullPage, {
   type HybridFullPageHandle,
-} from '../../../components/fund/tdf/HybridFullPage'
-import SectionNav from '../../../components/fund/tdf/SectionNav'
-import TdfHero from '../../../components/fund/tdf/TdfHero'
+} from '@/components/fund/tdf/HybridFullPage'
+import SectionNav from '@/components/fund/tdf/SectionNav'
+import TdfHero from '@/components/fund/tdf/TdfHero'
 import {
   GlidePathSlide,
   GlobalActiveSlide,
@@ -13,8 +13,8 @@ import {
   KoreaEmpSlide,
   QnaSlide,
   TdfOverviewSlide,
-} from '../../../components/fund/tdf/slides'
-import '../../../styles/pages/fund/tdf/index.scss'
+} from '@/components/fund/tdf/slides'
+import '@/styles/pages/fund/tdf/index.scss'
 
 export default function TdfPage() {
   const fullPageRef = useRef<HybridFullPageHandle>(null)
@@ -37,15 +37,25 @@ export default function TdfPage() {
 
   const handleSectionSelect = useCallback((id: string) => {
     if (id === 'tdf-overview') {
-      fullPageRef.current?.showSlide(1)
+      if (introState.locked) {
+        fullPageRef.current?.showSlide(1)
+      } else {
+        fullPageRef.current?.releaseTo(id)
+      }
       return
     }
 
     fullPageRef.current?.releaseTo(id)
-  }, [])
+  }, [introState.locked])
 
   const introSlides = [
     <TdfHero key="hero" />,
+    <TdfOverviewSlide
+      key="people"
+      eyebrow="TDF란?"
+      title="20대의 투자와 60대의 투자, 같아도 괜찮을까요?"
+      variant="people"
+    />,
     <TdfOverviewSlide
       key="allocation"
       eyebrow="TDF란?"

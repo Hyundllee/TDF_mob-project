@@ -19,28 +19,26 @@ export default function GlidePathSlide({ eyebrow, title }: ContentHeaderProps) {
       <ContentHeader eyebrow={eyebrow} title={title} />
       <h3>글로벌 액티브/EMP TDF 글라이드 패스 개요<sup>*</sup></h3>
       <div className="ratio-chart" aria-label="생애주기별 주식 비중">
-        <div className="ratio-chart__label">
+        <div className="ratio-chart__head" aria-hidden="true">
           <span>은퇴까지<sup>**</sup></span>
-          <strong>주식 비중<br />(%)</strong>
-          <span>펀드명</span>
-          <span>대상고객<sup>***</sup></span>
+          <strong>주식 비중(%)</strong>
+          <span className="ratio-chart__product-head"><b>펀드명</b><b>대상고객<sup>***</sup></b></span>
         </div>
-        <div className="ratio-chart__bars">
+        <div className="ratio-chart__rows">
           {glidePathData.map((item, index) => (
             <div key={item.fund}>
               <small>{item.year}</small>
               <div className="ratio-chart__bar-cell">
                 <i
                   style={{
-                    height: `${item.ratio}%`,
+                    width: `${item.ratio}%`,
                     animationDelay: `${index * 45}ms`,
                   }}
                 >
                   <b>{item.ratio}%</b>
                 </i>
               </div>
-              <span>{item.fund}</span>
-              <span>{item.target}</span>
+              <span><strong>{item.fund}</strong>{item.target}</span>
             </div>
           ))}
         </div>
