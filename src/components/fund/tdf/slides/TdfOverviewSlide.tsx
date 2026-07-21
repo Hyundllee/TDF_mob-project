@@ -60,7 +60,7 @@ export default function TdfOverviewSlide({
               <span className="overview-callout__glass" aria-hidden="true" />
               <img
                 className="overview-callout__shape"
-                src={tdfContentImages.bubbleBox}
+                src={tdfContentImages.overviewCallout}
                 alt=""
               />
               <div className="overview-callout__content">
@@ -77,7 +77,7 @@ export default function TdfOverviewSlide({
               <span className="overview-callout__glass" aria-hidden="true" />
               <img
                 className="overview-callout__shape"
-                src={tdfContentImages.bubbleBox}
+                src={tdfContentImages.overviewCallout}
                 alt=""
               />
               <div className="overview-callout__content">
